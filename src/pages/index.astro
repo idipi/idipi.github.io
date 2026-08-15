@@ -1,0 +1,161 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import { SITE } from "@/config";
+import { SOCIALS } from "@/constants";
+import getSortedPosts from "@/utils/getSortedPosts";
+import { getPath } from "@/utils/getPath";
+
+const projects = await getCollection("projects");
+const allPosts = await getCollection("blog");
+const recentPosts = getSortedPosts(allPosts).slice(0, 3);
+---
+
+<Layout title={SITE.title} description={SITE.desc}>
+  <Header />
+  <main id="main-content" class="app-layout pb-12">
+    <section class="border-b border-border py-10 sm:py-16">
+      <h1 class="text-4xl font-bold sm:text-5xl">{SITE.author}</h1>
+      <p class="mt-3 max-w-lg text-base leading-relaxed opacity-70 sm:text-lg">
+        {SITE.desc}
+      </p>
+      <div class="mt-5 flex flex-wrap gap-4">
+        {
+          SOCIALS.map(s => (
+            <a
+              href={s.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-sm font-medium text-accent decoration-dashed underline-offset-4 hover:underline"
+            >
+              {s.name} &rarr;
+            </a>
+          ))
+        }
+        <a
+          href="/cv.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-sm font-medium text-accent decoration-dashed underline-offset-4 hover:underline"
+        >
+          CV &rarr;
+        </a>
+      </div>
+    </section>
+
+    <section class="mt-10">
+      <p
+        class="mb-6 text-xs font-semibold tracking-widest uppercase opacity-40"
+      >
+        Projects
+      </p>
+      {
+        projects.length === 0 ? (
+          <p class="opacity-60">No projects yet. Check back soon.</p>
+        ) : (
+          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {projects.map(project => (
+              <article class="flex flex-col rounded-lg border border-border p-5 transition duration-150 hover:-translate-y-0.5 hover:border-accent/50">
+                <div class="flex items-start justify-between gap-3">
+                  <h2 class="font-app leading-snug font-semibold">
+                    {project.data.title}
+                  </h2>
+                  {project.data.status !== "active" && (
+                    <span class="mt-0.5 shrink-0 rounded-sm bg-muted px-1.5 py-0.5 text-xs opacity-70">
+                      {project.data.status === "wip" ? "WIP" : "archived"}
+                    </span>
+                  )}
+                </div>
+                <p class="mt-2 flex-1 text-sm leading-relaxed opacity-70">
+                  {project.data.description}
+                </p>
+                {project.data.stack.length > 0 && (
+                  <div class="mt-4 flex flex-wrap gap-1.5">
+                    {project.data.stack.map(tech => (
+                      <span class="rounded-sm bg-muted px-2 py-0.5 font-mono text-xs">
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                <div class="mt-4 flex gap-4">
+                  {project.data.repo && (
+                    <a
+                      href={project.data.repo}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="text-xs font-medium text-accent decoration-dashed underline-offset-4 hover:underline"
+                    >
+                      Source &nearr;
+                    </a>
+                  )}
+                  {project.data.live && (
+                    <a
+                      href={project.data.live}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="text-xs font-medium text-accent decoration-dashed underline-offset-4 hover:underline"
+                    >
+                      Live &nearr;
+                    </a>
+                  )}
+                </div>
+              </article>
+            ))}
+          </div>
+        )
+      }
+    </section>
+
+    {
+      recentPosts.length > 0 && (
+        <section class="mt-12 border-t border-border pt-10">
+          <p class="mb-6 text-xs font-semibold tracking-widest uppercase opacity-40">
+            Recent writing
+          </p>
+          <ul class="space-y-5">
+            {recentPosts.map(post => (
+              <li>
+                <a
+                  href={getPath(post.id, post.filePath)}
+                  class="group flex flex-col gap-1 sm:flex-row sm:items-baseline sm:gap-0"
+                >
+                  <span class="text-sm font-medium transition-opacity group-hover:opacity-100 sm:opacity-80">
+                    {post.data.title}
+                  </span>
+                  <span class="mx-3 hidden flex-1 border-b border-dashed border-border sm:block" />
+                  <time
+                    datetime={post.data.pubDatetime.toISOString()}
+                    class="font-mono text-xs opacity-40"
+                  >
+                    {post.data.pubDatetime.toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    })}
+                  </time>
+                </a>
+              </li>
+            ))}
+          </ul>
+          <a
+            href="/posts"
+            class="mt-6 inline-block text-xs font-medium text-accent decoration-dashed underline-offset-4 hover:underline"
+          >
+            All posts &rarr;
+          </a>
+        </section>
+      )
+    }
+    <img src="https://idipi.goatcounter.com/count?p=/" />
+  </main>
+  <Footer />
+</Layout>
+
+<script>
+  document.addEventListener("astro:page-load", () => {
+    sessionStorage.setItem("backUrl", "/");
+  });
+</script>

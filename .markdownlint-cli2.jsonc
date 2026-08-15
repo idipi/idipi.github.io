@@ -1,0 +1,13 @@
+{
+  "config": {
+    // Disable line length — not practical for prose
+    "MD013": false,
+    // Allow inline HTML — needed for Astro components in MDX
+    "MD033": false,
+    // Allow non-heading first line — frontmatter comes first
+    "MD041": false,
+  },
+  // Only lint .md files, not .mdx (handled by Prettier)
+  "globs": ["**/*.md"],
+  "ignores": ["node_modules/", "dist/", ".astro/"],
+}
