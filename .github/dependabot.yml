@@ -29,6 +29,8 @@ updates:
           - "minor"
           - "patch"
     open-pull-requests-limit: 5
+    ignore:
+      - dependency-name: "typescript"
 
   # GitHub Actions are checked separately from npm packages.
   - package-ecosystem: "github-actions"
