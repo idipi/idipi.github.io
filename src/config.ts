@@ -1,0 +1,23 @@
+export const SITE = {
+  website: "https://idipi.github.io",
+  author: "Jevgeni Diede",
+  profile: "https://github.com/idipi",
+  desc: "Site Reliability Engineer. Production operations, observability, automation.",
+  title: "Jevgeni Diede",
+  ogImage: "og.png",
+  lightAndDarkMode: true,
+  postPerIndex: 5,
+  postPerPage: 10,
+  scheduledPostMargin: 15 * 60 * 1000,
+  showArchives: true,
+  showBackButton: true,
+  editPost: {
+    enabled: false,
+    text: "Edit page",
+    url: "https://github.com/idipi/idipi.github.io/edit/main/",
+  },
+  dynamicOgImage: false,
+  dir: "ltr",
+  lang: "en",
+  timezone: "UTC",
+} as const;

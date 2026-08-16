@@ -1,0 +1,51 @@
+version: 2
+updates:
+  # npm dependencies:
+  # - regular minor/patch updates are grouped to reduce PR noise
+  # - major updates stay as separate PRs and should be reviewed manually
+  # - security updates are not delayed by cooldown
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "07:00"
+      timezone: "Etc/UTC"
+    versioning-strategy: "increase"
+    commit-message:
+      prefix: "chore(deps)"
+      prefix-development: "chore(deps-dev)"
+      include: "scope"
+    cooldown:
+      semver-major-days: 14
+      semver-minor-days: 7
+      semver-patch-days: 3
+    groups:
+      minor-and-patch:
+        applies-to: "version-updates"
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+    open-pull-requests-limit: 5
+
+  # GitHub Actions are checked separately from npm packages.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "07:30"
+      timezone: "Etc/UTC"
+    commit-message:
+      prefix: "chore(actions)"
+      include: "scope"
+    cooldown:
+      default-days: 7
+    groups:
+      github-actions:
+        applies-to: "version-updates"
+        patterns:
+          - "*"
+    open-pull-requests-limit: 3

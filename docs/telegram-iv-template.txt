@@ -1,0 +1,16 @@
+~version: "2.1"
+
+# Match blog post pages only
+?path: /posts/.+
+
+# Required
+$title:          //h1[1]
+$body:           //article[@id="article"]
+
+# Optional metadata
+$published_date: //time[@datetime]/@datetime
+$author:         //meta[@name="author"]/@content
+
+# Fixes
+# Markdown renders images as <p><img/></p>; IV requires images at block level
+@replace_tag(<figure>): //p[./img]

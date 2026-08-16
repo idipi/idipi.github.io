@@ -1,0 +1,22 @@
+# lychee link checker configuration
+
+max_concurrency = 8
+max_retries = 3
+max_redirects = 10
+timeout = 20
+
+# Cache settings
+cache = true
+max_cache_age = "1d"
+
+# Exclude known bot-blocking sites and non-HTTP schemes
+exclude = [
+  "https://www.linkedin.com/.*",
+  "https://linkedin.com/.*",
+  "https://x.com/.*",
+  "https://twitter.com/.*",
+  "^mailto:",
+]
+
+# Accept common success codes
+accept = [200, 429]

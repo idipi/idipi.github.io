@@ -1,0 +1,37 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { getPath } from "@/utils/getPath";
+import Datetime from "./Datetime.astro";
+
+type Props = {
+  variant?: "h2" | "h3";
+} & CollectionEntry<"blog">;
+
+const { variant: Heading = "h2", id, data, filePath } = Astro.props;
+
+const { title, description, wip, ...props } = data;
+---
+
+<li class="my-6">
+  <a
+    href={getPath(id, filePath)}
+    class:list={[
+      "inline-block text-lg font-medium text-accent",
+      "decoration-dashed underline-offset-4 hover:underline",
+      "focus-visible:no-underline focus-visible:underline-offset-0",
+    ]}
+  >
+    <Heading>
+      {title}
+      {
+        wip && (
+          <span class="ms-2 rounded-sm bg-muted px-1.5 py-0.5 text-xs font-normal opacity-70">
+            WIP
+          </span>
+        )
+      }
+    </Heading>
+  </a>
+  <Datetime {...props} />
+  <p>{description}</p>
+</li>
