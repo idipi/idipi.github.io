@@ -1,0 +1,44 @@
+---
+import type { GetStaticPaths } from "astro";
+import { getCollection } from "astro:content";
+import Main from "@/layouts/Main.astro";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import Card from "@/components/Card.astro";
+import Pagination from "@/components/Pagination.astro";
+import getSortedPosts from "@/utils/getSortedPosts";
+import { SITE } from "@/config";
+import IconRss from "@/assets/icons/IconRss.svg";
+
+export const getStaticPaths = (async ({ paginate }) => {
+  const posts = await getCollection("blog", ({ data }) => !data.draft);
+  return paginate(getSortedPosts(posts), { pageSize: SITE.postPerPage });
+}) satisfies GetStaticPaths;
+
+const { page } = Astro.props;
+---
+
+<Layout title={`Posts | ${SITE.title}`}>
+  <Header />
+  <Main pageTitle="Posts" pageDesc="All the articles I've posted.">
+    <a
+      slot="header-action"
+      href="/rss.xml"
+      target="_blank"
+      rel="noopener noreferrer"
+      title="RSS feed"
+      class="flex items-center gap-1.5 text-xs opacity-50 transition-opacity hover:opacity-100"
+    >
+      <IconRss class="size-4" />
+      RSS
+    </a>
+    <ul>
+      {page.data.map(data => <Card {...data} />)}
+    </ul>
+  </Main>
+
+  <Pagination {page} />
+
+  <Footer noMarginTop={page.lastPage > 1} />
+</Layout>

@@ -1,0 +1,29 @@
+# Security scanning: npm audit for dependency vulnerabilities.
+# Static sites have a reduced attack surface — the main risk is supply chain.
+name: Security
+
+on:
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "0 7 * * 1" # Monday 07:00 UTC
+
+permissions:
+  contents: read
+
+jobs:
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
+        with:
+          node-version-file: ".node-version"
+          cache: "npm"
+
+      - run: npm ci
+
+      # Only fail on high/critical — low/moderate in devDeps are not exploitable in static output
+      - name: npm audit
+        run: npm audit --audit-level=high

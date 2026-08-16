@@ -1,0 +1,59 @@
+{
+  "name": "portfolio",
+  "type": "module",
+  "version": "0.2.0",
+  "private": true,
+  "scripts": {
+    "dev": "npm run build:cv && astro dev",
+    "build": "npm run build:cv && npm run build:site",
+    "build:cv": "python3 tools/cv/build_cv.py public/cv.pdf",
+    "build:site": "astro check && astro build && pagefind --site dist && cp -r dist/pagefind public/",
+    "preview": "astro preview",
+    "setup:cv": "python3 -m pip install -r tools/cv/requirements.txt",
+    "sync": "astro sync",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "dependencies": {
+    "@astrojs/markdown-remark": "^7.2.2",
+    "@astrojs/rss": "^4.0.19",
+    "@astrojs/sitemap": "^3.7.3",
+    "@resvg/resvg-js": "^2.6.2",
+    "@tailwindcss/vite": "^4.3.3",
+    "astro": "^7.2.2",
+    "dayjs": "^1.11.21",
+    "lodash.kebabcase": "^4.1.1",
+    "markdown-it": "^15.0.0",
+    "remark-collapse": "^0.1.2",
+    "remark-toc": "^9.0.0",
+    "sanitize-html": "^2.17.7",
+    "satori": "^0.29.0",
+    "sharp": "^0.35.3",
+    "slugify": "^1.6.9",
+    "tailwindcss": "^4.3.3"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@pagefind/default-ui": "^1.5.2",
+    "@shikijs/transformers": "^4.4.3",
+    "@tailwindcss/typography": "^0.5.20",
+    "@types/lodash.kebabcase": "^4.1.9",
+    "@types/markdown-it": "^14.1.2",
+    "@types/sanitize-html": "^2.16.1",
+    "eslint": "^10.8.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-astro": "^3.1.0",
+    "globals": "^17.11.0",
+    "markdownlint-cli2": "^0.23.2",
+    "pagefind": "^1.5.2",
+    "prettier": "^3.9.6",
+    "prettier-plugin-astro": "^0.14.1",
+    "prettier-plugin-tailwindcss": "^0.8.1",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.67.0"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true
+  }
+}
