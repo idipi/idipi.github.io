@@ -1,0 +1,33 @@
+# Dependencies (re-installed via npm ci in the build stage)
+node_modules/
+
+# Build output (generated inside the container)
+dist/
+
+# Astro cache
+.astro/
+
+# Git history (not needed for build)
+.git/
+.github/
+
+# Environment
+.env
+.env.*
+
+# Editor / OS
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Generated artifacts (built inside the container)
+public/pagefind/
+public/cv.pdf
+
+# Docs (not needed in image)
+docs/
+README.md
+LICENSE

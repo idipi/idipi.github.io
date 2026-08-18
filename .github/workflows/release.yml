@@ -1,0 +1,39 @@
+# Release pipeline: semantic versioning, Docker build with signing, and VPS deploy.
+# Only runs on push to main; requires Conventional Commits to trigger a release.
+name: Release
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  release:
+    uses: idipi/release-workflow/.github/workflows/release.yml@main
+    with:
+      image_name: ${{ github.repository }}
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+      packages: write
+      id-token: write
+      attestations: write
+    secrets:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  deploy:
+    name: Deploy to VPS
+    needs: release
+    if: needs.release.outputs.new_release_published == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pull and restart on VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            cd /opt/idipi-site
+            docker compose pull website
+            docker compose up -d website
